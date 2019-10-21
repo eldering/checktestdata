@@ -1,6 +1,8 @@
 #ifndef BIGINT_HPP
 #define BIGINT_HPP
 
+#include <gmpxx.h>
+
 /**
  * Wrapper around gmp's mpz_class, with a fast path for values that fit in a long.
  */
