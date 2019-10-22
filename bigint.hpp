@@ -3,6 +3,12 @@
 
 #include <gmpxx.h>
 
+#if ( defined(__has_builtin) && \
+      __has_builtin(__builtin_smull_overflow) && \
+      __has_builtin(__builtin_saddl_overflow) && \
+      __has_builtin(__builtin_ssubl_overflow) )
+
+
 /**
  * Wrapper around gmp's mpz_class, with a fast path for values that fit in a long.
  */
@@ -178,5 +184,22 @@ inline std::ostream& operator<<(std::ostream& os, const bigint& x) {
 		return os << x.small;
 	}
 }
+
+#else /* __builtin_* not defined */
+
+class bigint : public mpz_class {
+public:
+	mutable long small;
+
+	bigint(): mpz_class(), small(LONG_MIN) {}
+	bigint(long x): mpz_class(x), small(LONG_MIN) {}
+	bigint(const mpz_class& x): mpz_class(x), small(LONG_MIN) {}
+	bigint(const std::string& str): mpz_class(str), small(LONG_MIN) {}
+
+	mpz_class to_mpz() const { return *this; }
+	void shrink() const {}
+};
+
+#endif
 
 #endif /* BIGINT_HPP */

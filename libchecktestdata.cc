@@ -866,7 +866,7 @@ void gentoken(command cmd, ostream &datastream)
 	else if ( cmd.name()=="INT" ) {
 		bigint lo = eval(cmd.args[0]);
 		bigint hi = eval(cmd.args[1]);
-		bigint x(lo.to_mpz() + gmp_rnd.get_z_range((hi - lo + 1).to_mpz()));
+		bigint x(lo.to_mpz() + gmp_rnd.get_z_range(bigint(hi - lo + 1).to_mpz()));
 
 		if ( cmd.nargs()>=3 ) {
 			// Check if we have a preset value, then override the
